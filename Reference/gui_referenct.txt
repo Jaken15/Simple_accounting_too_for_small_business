@@ -1,0 +1,165 @@
+from tkinter import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
+
+root = Tk()
+root.title("Expense Tracker")
+root.geometry("1000x550")
+root.configure(bg="#f5f6fa")
+root.resizable(False, False)
+
+# ================= HEADER =================
+header = Frame(root, bg="#40739e", height=60)
+header.pack(fill=X)
+
+Label(
+    header,
+    text="Expense Tracker",
+    bg="#40739e",
+    fg="white",
+    font=("Arial", 18, "bold")
+).pack(pady=15)
+
+# ================= MAIN =================
+main = Frame(root, bg="#f5f6fa")
+main.pack(fill=BOTH, expand=True)
+
+# ================= SIDEBAR =================
+sidebar = Frame(main, bg="#2f3640", width=200)
+sidebar.pack(side=LEFT, fill=Y)
+
+def sidebar_btn(text):
+    return Button(
+        sidebar,
+        text=text,
+        bg="#2f3640",
+        fg="white",
+        font=("Arial", 12),
+        relief="flat",
+        activebackground="#353b48",
+        activeforeground="white",
+        padx=20,
+        pady=10
+    )
+
+sidebar_btn("Home").pack(fill=X)
+sidebar_btn("Add Expense").pack(fill=X)
+sidebar_btn("History").pack(fill=X)
+
+# ================= CONTENT =================
+content = Frame(main, bg="#f5f6fa")
+content.pack(side=LEFT, fill=BOTH, expand=True, padx=20, pady=20)
+
+# ================= ADD EXPENSE =================
+add_frame = Frame(content, bg="white", bd=1, relief="solid")
+add_frame.pack(fill=X, pady=10)
+
+Label(add_frame, text="Add Expense", bg="white",
+      font=("Arial", 14, "bold")).pack(anchor="w", padx=10, pady=10)
+
+Entry(add_frame, font=("Arial", 12)).pack(fill=X, padx=10, pady=5)
+Entry(add_frame, font=("Arial", 12)).pack(fill=X, padx=10, pady=5)
+
+Button(add_frame, text="Add",
+       bg="#40739e", fg="white",
+       font=("Arial", 12),
+       relief="flat").pack(padx=10, pady=10)
+
+# ================= LOWER AREA =================
+lower = Frame(content, bg="#f5f6fa")
+lower.pack(fill=BOTH, expand=True)
+
+# ===== Expense List =====
+list_frame = Frame(lower, bg="white", bd=1, relief="solid")
+list_frame.pack(side=LEFT, fill=BOTH, expand=True, padx=(0, 10))
+
+Label(list_frame, text="Expenses",
+      bg="white", font=("Arial", 14, "bold")).pack(anchor="w", padx=10, pady=10)
+
+expense_list = Listbox(list_frame, font=("Arial", 12), bd=0)
+expense_list.pack(fill=BOTH, expand=True, padx=10, pady=5)
+
+# Sample list
+expense_list.insert(END, "Food - ₱100")
+expense_list.insert(END, "Transpo - ₱50")
+expense_list.insert(END, "Bills - ₱200")
+
+# ===== Chart Area =====
+chart_frame = Frame(lower, bg="white", bd=1, relief="solid", width=300)
+chart_frame.pack(side=LEFT, fill=Y)
+
+Label(chart_frame, text="Expense Chart",
+      bg="white", font=("Arial", 14, "bold")).pack(pady=10)
+
+# ================= CHART =================
+fig = Figure(figsize=(3, 3), dpi=100)
+ax = fig.add_subplot(111)
+
+# SAMPLE DATA
+categories = ["Food", "Transpo", "Bills"]
+amounts = [100, 50, 200]
+
+ax.pie(amounts, labels=categories, autopct="%1.1f%%", startangle=90)
+ax.set_title("Expenses by Category")
+
+canvas = FigureCanvasTkAgg(fig, master=chart_frame)
+canvas.draw()
+canvas.get_tk_widget().pack()
+
+root.mainloop()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+simple tkinter and matplotlib integration
+
+import numpy as np
+import matplotlib.pyplot as plt
+from tkinter import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+# Sample data lang muna
+categories = ["food","shopping","healt"]
+amount = np.array([125,163,140])
+colors = ["red","green","blue"]
+
+root = Tk()
+root.geometry("420x420")
+
+chart_frame = Frame(root,relief='raised',bd=2,bg='white',width=220,height=220)
+chart_frame.pack(pady=20)
+
+fig,ax = plt.subplots(figsize=(2,2))
+
+ax.pie(amount,labels=categories,colors=colors,autopct="%f")
+ax.set_title("Expenses")
+
+canvas = FigureCanvasTkAgg(fig,master=chart_frame)
+canvas.draw()
+canvas.get_tk_widget().pack()
+
+root.mainloop()
+
+
+Using System;
+class Program
+{
+    static void Main(string[] agrs)
+    {
+        
+    }
+}

@@ -1,0 +1,104 @@
+import sqlite3
+
+"#1abc9c",  # teal
+    "#3498db",  # blue
+    "#9b59b6",  # purple
+    "#e67e22",  # orange
+    "#e74c3c",  # red
+    "#2ecc71",  # green
+    "#f1c40f",  # yellow
+    "#34495e",
+
+class DataBase:
+    def __init__(self):
+        self.con = sqlite3.connect("C:/Users/pc/studentManagement/BankTeller.db")
+        self.cursor = self.con.cursor()
+    
+    def create_table(self):
+        con = sqlite3.connect("C:/Users/pc/studentManagement/BankTeller.db")
+        try:
+            self.cursor.execute("""CREATE TABLE IF NOT EXISTS user3(
+                            PinNumber INTEGER,
+                            Balance INTEGER,
+                            Date TEXT,
+                            Time TEXT,
+                            Transact TEXT
+                            )""")
+            con.commit()
+        except Exception as e:
+            print(e)
+        finally:
+            con.close() 
+
+    def Insert_data(self,data:list,table_name):
+        con = sqlite3.connect("C:/Users/pc/studentManagement/BankTeller.db")
+        try:
+            placeholder = f",".join(["?"] * len(data[0]))
+            query = f"INSERT INTO {table_name} VALUES ({placeholder})"
+            self.cursor.executemany(query,data)
+            con.commit()
+        except Exception as e:
+            print(e)
+        finally:
+            con.close()
+
+    
+    def view_data(self,table_name):
+        con = sqlite3.connect("C:/Users/pc/studentManagement/BankTeller.db")
+        try:
+            query = f"SELECT * FROM {table_name}"
+            self.cursor.execute(query)
+            return self.cursor.fetchall()
+        except Exception as e:
+            print(e)
+        finally:
+            con.close()
+
+    def balance(self,tabe_name):
+        con = sqlite3.connect("C:/Users/pc/studentManagement/BankTeller.db")
+        try:
+            query = f"SELECT Balance FROM {tabe_name}"
+            self.cursor.execute(query)
+            for amount in self.cursor.fetchall():
+                for cash in amount:
+                    if isinstance(cash,int):
+                        print(cash)
+                        return cash
+        except Exception as e:
+            print(e)
+        finally:
+            con.close()
+
+    def increment_column(self,table_name,amount,PiNumber):
+        con = sqlite3.connect("C:/Users/pc/studentManagement/BankTeller.db")
+        try:
+            query = f""" 
+            UPDATE {table_name}
+            SET Balance = Balance + ?
+            WHERE PinNumber = ?
+            """
+            self.cursor.execute(query,(amount,PiNumber))
+            con.commit()
+        except Exception as e:
+            print(e)
+        finally:
+            con.close()
+
+    def discrement_value(self,table_name,amount,PinNumber):
+        con = sqlite3.connect("C:/Users/pc/studentManagement/BankTeller.db")
+        try:
+            query = f"""
+            UPDATE {table_name}
+            SET Balance = Balance - ?
+            WHERE PinNumber = ?
+            """
+            self.cursor.execute(query,(amount,PinNumber))
+            con.commit()
+        except Exception as e:
+            print(e)
+        finally:
+            con.close()
+
+db = DataBase()
+# db.discrement_value("user3",100,11123)
+# db.balance("user3")

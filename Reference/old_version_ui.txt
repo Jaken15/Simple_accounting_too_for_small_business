@@ -1,0 +1,323 @@
+from tkinter import*
+from tkinter import ttk
+from tkinter import messagebox
+from data_validation import valid_date as process
+from PIL import Image,ImageTk
+
+root = Tk()
+class Simple_gui:
+    def __init__(self,root):
+        root.geometry("1000x550")
+        root.title("Expense Tracker")
+        self.process = process()
+        self.user_colors = set()
+
+        expenses_tracker = Label(text="Expense Tracker 🤑",
+                                 bg="#737af6",
+                                 justify='center',
+                                 height=2,
+                                 font=("arial",15),
+                                 fg='white',
+                                 relief='raised')
+        expenses_tracker.pack(side='top',fill='x')
+
+                                  # SIDEBAR FRAME AND BUTTONS
+
+        side_bar = Frame(root,
+                         width=110,
+                         bg="#afb3ff",
+                         relief='ridge',
+                         bd=2)
+        side_bar.pack(fill='y',side='left')
+        side_bar.pack_propagate(False)
+
+        home_image = self.fit_image_to_button("iconfolder/home.png",70,30)
+
+        Home_button = Button(side_bar,
+                             text="Home",
+                             bg="#92f8b4",
+                             font=("arial",11),
+                             fg='black',
+                             relief='raised',
+                             image=home_image,
+                             compound='bottom',
+                             bd=2,
+                             padx=1,
+                             pady=1,
+                             command=self.Home_frame)
+        Home_button.pack(pady=(20,10))
+        Home_button.imege = home_image
+
+        income_image = self.fit_image_to_button("iconfolder/dollar.png",70,30)
+        Add_income_button = Button(side_bar,
+                             text="Add",
+                             bg="#92f8b4",
+                             image=income_image,
+                             compound='bottom',
+                             font=("arial",11),
+                             fg='black',
+                             relief='raised',
+                             bd=2,
+                             padx=1,
+                             pady=1,
+                             command=self.add_income_frame)
+        Add_income_button.pack(pady=(20,10))
+        Add_income_button.image = income_image
+
+        delete_image = self.fit_image_to_button("iconfolder/trash.png",70,30)
+        Delete_button = Button(side_bar,
+                             text="Delete",
+                             image=delete_image,
+                             compound='bottom',
+                             bg="#92f8b4",
+                             font=("arial",12),
+                             fg='black',
+                             relief='raised',
+                             padx=1,
+                             pady=1,
+                             bd=2
+                             )
+        Delete_button.pack(pady=(20,10))
+        Delete_button.image = delete_image
+
+        update_image = self.fit_image_to_button("iconfolder/refresh.png",70,30)
+        Update_button = Button(side_bar,
+                             text="Update",
+                             image=update_image,
+                             compound='bottom',
+                             bg="#92f8b4",
+                             font=("arial",12),
+                             fg='black',
+                             relief='raised',
+                             bd=2,
+                             padx=1,
+                             pady=1)
+        Update_button.pack(pady=(20,10))
+        Update_button.image = update_image
+
+        exit_image = self.fit_image_to_button("iconfolder/exit.png",70,30)
+        Exit_button = Button(side_bar,
+                             image=exit_image,
+                             compound='bottom',
+                             text="Exit",
+                             bg="#92f8b4",
+                             font=("arial",12),
+                             fg='black',
+                             relief='raised',
+                             bd=2,
+                             padx=1,
+                             pady=1,
+                             command=root.destroy)
+        Exit_button.pack(pady=(20,10))
+        Exit_button.image = exit_image
+
+        self.main_frame = Frame(root,
+                           width=800,
+                           height=400,
+                           relief='raised',
+                           bd=5)
+        self.main_frame.pack(side='left',expand=True)
+        self.main_frame.pack_propagate(False)
+        self.Home_frame()
+        
+    def Home_frame(self):
+        self.Clear()
+        dashboard_notebook = ttk.Notebook(self.main_frame)
+        dashboard_frame = Frame(dashboard_notebook)
+        dashboard_notebook.add(dashboard_frame,text="Main dashboard")
+        
+        Label_frame = Frame(dashboard_frame)
+        Label_frame.pack(side='top')
+        
+        total_income = Label(Label_frame,
+                             text=f"Total Income $: {self.process.recent_income}",
+                             font=("arial",12),
+                             bg='green',
+                             fg='white',
+                             width=20,
+                             relief="raised"
+                             )
+        total_income.pack(side='left',padx=(10,20),pady=20)
+
+        total_expenses = Label(Label_frame,
+                             text=f"Total Expenses $: {self.process.recent_expenses}",
+                             font=("arial",12),
+                             bg='red',
+                             fg='white',
+                             width=20,
+                             relief='raised'
+                             )
+        total_expenses.pack(side='left',padx=(15,10),pady=20)
+
+        current_balance = Label(Label_frame,
+                             text=f"Current balance $: {self.process.recent_balance}",
+                             font=("arial",12),
+                             bg='blue',
+                             fg='white',
+                             width=20,
+                             relief='raised'
+                             )
+        
+        current_balance.pack(side='left',padx=(5,10),pady=20)
+
+        income_frame = Frame(dashboard_frame,
+                             width=600,
+                             relief='raised',
+                             bd=3)
+        income_frame.pack(side='left')
+
+        income_tree = ttk.Treeview(income_frame,
+                            columns=("id",
+                                    "amount",
+                                    "type",
+                                    "category",
+                                    "note",
+                                    "date"),
+                                    show='headings')
+        scroll_y = ttk.Scrollbar(income_frame,orient='vertical',command=income_tree.yview)
+
+        income_tree.configure(yscrollcommand=scroll_y.set)
+        income_tree.column("id",width=60,anchor='w',stretch=False)
+        income_tree.column("amount",width=80,anchor='w',stretch=False)
+        income_tree.column("type",width=70,anchor='w',stretch=False)
+        income_tree.column("category",width=80,anchor='w',stretch=False)
+        income_tree.column("note",width=100,anchor='w',stretch=False)
+        income_tree.column("date",width=80,anchor='w',stretch=False)
+
+        income_tree.heading("id",text="id",anchor='w')
+        income_tree.heading("amount",text="amount",anchor='w')
+        income_tree.heading("type",text="type",anchor='w')
+        income_tree.heading("category",text="category",anchor='w')
+        income_tree.heading("note",text="note",anchor='w')
+        income_tree.heading("date",text="date",anchor='w')
+        recent_transaction = Label(income_frame,
+                                   text="Recent transaction",
+                                   font=("arial",10))
+        
+        data = self.process.recent_data()
+        for id,item in enumerate(data):
+            income_tree.insert(parent='',index='end',iid=id,values=item)
+
+        recent_transaction.pack()
+        income_tree.pack(side='left')
+
+        side_frame = Frame(dashboard_frame,
+                             width=600,
+                             bd=3)
+        side_frame.pack(side='left')
+        
+        canvas = Canvas(side_frame,height=400)
+        canvas.pack(side='left',fill='y')
+        scrollbar = Scrollbar(side_frame,orient='vertical',command=canvas.yview)
+        scrollbar.pack(side='right',fill='y')
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+        scrollable_frame = Frame(canvas)
+        canvas.create_window((0,0),window=scrollable_frame,anchor='nw')
+
+        scrollable_frame.bind(
+            "<Configure>",lambda e:canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        canvas.bind_all("<MouseWheel>",
+                        lambda e:canvas.yview_scroll(-1 *(e.delta // 120),"units"))
+        
+        y = 25
+        for category in self.process.recent_category_expenses():
+            category_label = Label(scrollable_frame,
+                                   text=f"{category}$: {self.process.category[category]}",
+                                   font=("arial",12),
+                                   bg="#d16262",
+                                   fg="white",
+                                   relief='raised')
+            category_label.pack(pady=y)
+            y += 20
+
+        chart_frame = Frame(dashboard_notebook)
+        dashboard_notebook.add(chart_frame,text="Sales chart")
+        dashboard_notebook.pack(fill='both',expand=True)
+
+    def add_income_frame(self):
+        self.Clear()
+        income_frame = Frame(self.main_frame,
+                            width=320,
+                            relief='solid',
+                            bd=1)
+        income_frame.pack(side='left',fill='y',expand=True)
+        income_frame.pack_propagate(False)
+
+        add_income_label = Label(income_frame,
+                               text="Record Income",
+                               font=("arial",14,"bold"),
+                               fg="white",
+                               bg="green"                           
+                               )
+        add_income_label.pack(pady=(10,5),fill='x')
+        
+        category_label = Label(income_frame,
+                               text="Enter category :",
+                               font=("arial",12))
+        category_label.pack(pady=(20,5))
+
+        categories = self.process.category_expenses
+        category = ttk.Combobox(income_frame,
+                                values=categories,
+                                font=("arial",12),
+                                width=17)
+        
+        category.pack()
+
+        amount_label = Label(income_frame,
+                               text="Enter amount :",
+                               font=("arial",12))
+        amount_label.pack(pady=(20,5))
+
+        amount_entry = Entry(income_frame,
+                               font=("arial",12))
+        amount_entry.pack()
+
+        note_label = Label(income_frame,
+                               text="Enter note optional :",
+                               font=("arial",12))
+        note_label.pack(pady=(20,5))
+
+        note_entry = Entry(income_frame,
+                               font=("arial",12))
+        note_entry.pack()
+
+        income_button = Button(income_frame,
+                               text="Record income",
+                               bg="green",
+                               fg="white",
+                               font=("arial",12),
+                               command=lambda:self.Record_data(category,"income",amount_entry,note_entry))
+        income_button.pack(pady=(40,5))
+
+    
+    def Record_data(self,category,value,amount,note):
+        category_value = category.get()
+        amount_value = amount.get()
+        note_value = note.get()
+        if len(category_value) and len(amount_value) != 0:
+            if value == "income":
+                self.process.add_data_by_category("expense",category_value,amount_value,note_value)
+                category.delete(0,END)
+                amount.delete(0,END)
+                note.delete(0,END)
+            elif value == "expense":
+                self.process.add_data_by_category(amount_value,"expense",category_value,note_value)
+                category.delete(0,END)
+                amount.delete(0,END)
+                note.delete(0,END)
+        else:
+            messagebox.showwarning("Empty","Pls complete the form")
+    def Clear(self):
+        for widget in self.main_frame.winfo_children():
+            widget.destroy()
+    
+    def fit_image_to_button(self,image_path, button_width, button_height):
+        img = Image.open(image_path)
+        img = img.resize((button_width, button_height), Image.Resampling.LANCZOS)
+        return ImageTk.PhotoImage(img)
+
+Gui = Simple_gui(root)
+root.mainloop()
