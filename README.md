@@ -82,5 +82,12 @@ Improve the user interface design
 
 Add user authentication
 
+<img width="1002" height="582" alt="image" src="https://github.com/user-attachments/assets/e7941ed6-6c6b-4092-a6cf-f75927284117" />
+
+
+
+
 <img width="1002" height="582" alt="image" src="https://github.com/user-attachments/assets/4c0aff7e-1a46-46f1-93c4-672798c80f37" />
+
+
 
