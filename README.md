@@ -81,3 +81,6 @@ Add monthly and yearly financial summaries
 Improve the user interface design
 
 Add user authentication
+
+<img width="1002" height="582" alt="image" src="https://github.com/user-attachments/assets/4c0aff7e-1a46-46f1-93c4-672798c80f37" />
+
